@@ -1,0 +1,45 @@
+{
+  "name": "whizzimo",
+  "version": "1.0.0",
+  "productName": "Whizzimo",
+  "description": "Whizzimo Desktop Client",
+  "author": "Whizzimo",
+  "homepage": "http://www.whizzimo.com/",
+  "main": "index.js",
+  "build": {
+    "appId": "com.prolificrew.whizzimo",
+    "squirrelWindows": {
+      "iconUrl": "file:///F:/Projects/whizzimo-app/app.ico",
+      "remoteReleases": "https://edu.whizzimo.com/app/"
+    },
+    "win": {
+      "icon": "./build/icon.ico",
+      "certificateFile": "./certs/whizzimo.pfx",
+      "certificatePassword": "Whizzardedu@7851"
+    }
+  },
+  "scripts": {
+    "start": "electron .",
+    "debug": "electron --inspect=5858 main.js",
+    "pack": "electron-builder --dir -p always",
+    "test": "mocha"
+  },
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "electron": "^1.7.8",
+    "electron-builder": "^19.33.0",
+    "electron-packager": "^9.1.0",
+    "electron-reload": "^1.2.2",
+    "mocha": "^3.4.2",
+    "should": "^13.1.2",
+    "spectron": "^3.7.2"
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "electron-squirrel-startup": "^1.0.0",
+    "electron-updater": "^2.16.1",
+    "request": "^2.83.0"
+  }
+}
