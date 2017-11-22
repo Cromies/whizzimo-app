@@ -4,7 +4,8 @@ const {
   dialog,
   Menu,
   Tray,
-  globalShortcut
+  globalShortcut,
+  autoUpdater
   } = require('electron'),
   MenuTemplate = require('./templates/menu.template'),
   tray = require('./templates/trayMenu.template'),
@@ -18,11 +19,79 @@ if (handleSquirrelEvent(app)) {
   // squirrel event handled and app will exit in 1000ms, so don't do anything else
   return;
 }
+
+// In this file you can include the rest of your app's specific main process
+// code. You can also put them in separate files and require them here.
+function handleSquirrelEvent(application) {
+  if (process.argv.length === 1) {
+      return false;
+  }
+
+  const ChildProcess = require('child_process');
+
+  const appFolder = path.resolve(process.execPath, '..');
+  const rootAtomFolder = path.resolve(appFolder, '..');
+  const updateDotExe = path.resolve(path.join(rootAtomFolder, 'Update.exe'));
+  const exeName = path.basename(process.execPath);
+
+  const spawn = function(command, args) {
+      let spawnedProcess, error;
+
+      try {
+          spawnedProcess = ChildProcess.spawn(command, args, {
+              detached: true
+          });
+      } catch (error) {}
+
+      return spawnedProcess;
+  };
+
+  const spawnUpdate = function(args) {
+      return spawn(updateDotExe, args);
+  };
+
+  const squirrelEvent = process.argv[1];
+  switch (squirrelEvent) {
+      case '--squirrel-install':
+      case '--squirrel-updated':
+          // Optionally do things such as:
+          // - Add your .exe to the PATH
+          // - Write to the registry for things like file associations and
+          //   explorer context menus
+
+          // Install desktop and start menu shortcuts
+          spawnUpdate(['--createShortcut', exeName]);
+
+          setTimeout(application.quit, 1000);
+          return true;
+
+      case '--squirrel-uninstall':
+          // Undo anything you did in the --squirrel-install and
+          // --squirrel-updated handlers
+
+          // Remove desktop and start menu shortcuts
+          spawnUpdate(['--removeShortcut', exeName]);
+
+          setTimeout(application.quit, 1000);
+          return true;
+
+      case '--squirrel-obsolete':
+          // This is called on the outgoing version of your app before
+          // we update to the new version - it's the opposite of
+          // --squirrel-updated
+
+          application.quit();
+          return true;
+  }
+};
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
-async function createWindow () {
+async function createWindow() {
+  autoUpdater.setFeedURL(config.updateURL);
+
   mainWindow = new BrowserWindow
     (config.getElectronWindowSettings());
   
@@ -36,7 +105,9 @@ async function createWindow () {
   
   Menu.setApplicationMenu(menu);
 
-  renderer.renderUI(mainWindow);
+  await renderer.renderUI(mainWindow);
+
+  autoUpdater.checkForUpdates();
 };
 
 // Clears the Storage Caches
@@ -147,67 +218,34 @@ async function loadEventHandlers() {
 
 app.on(config.events.READY, createWindow)
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
-function handleSquirrelEvent(application) {
-  if (process.argv.length === 1) {
-      return false;
-  }
-
-  const ChildProcess = require('child_process');
-
-  const appFolder = path.resolve(process.execPath, '..');
-  const rootAtomFolder = path.resolve(appFolder, '..');
-  const updateDotExe = path.resolve(path.join(rootAtomFolder, 'Update.exe'));
-  const exeName = path.basename(process.execPath);
-
-  const spawn = function(command, args) {
-      let spawnedProcess, error;
-
-      try {
-          spawnedProcess = ChildProcess.spawn(command, args, {
-              detached: true
-          });
-      } catch (error) {}
-
-      return spawnedProcess;
-  };
-
-  const spawnUpdate = function(args) {
-      return spawn(updateDotExe, args);
-  };
-
-  const squirrelEvent = process.argv[1];
-  switch (squirrelEvent) {
-      case '--squirrel-install':
-      case '--squirrel-updated':
-          // Optionally do things such as:
-          // - Add your .exe to the PATH
-          // - Write to the registry for things like file associations and
-          //   explorer context menus
-
-          // Install desktop and start menu shortcuts
-          spawnUpdate(['--createShortcut', exeName]);
-
-          setTimeout(application.quit, 1000);
-          return true;
-
-      case '--squirrel-uninstall':
-          // Undo anything you did in the --squirrel-install and
-          // --squirrel-updated handlers
-
-          // Remove desktop and start menu shortcuts
-          spawnUpdate(['--removeShortcut', exeName]);
-
-          setTimeout(application.quit, 1000);
-          return true;
-
-      case '--squirrel-obsolete':
-          // This is called on the outgoing version of your app before
-          // we update to the new version - it's the opposite of
-          // --squirrel-updated
-
-          application.quit();
-          return true;
-  }
-};
+autoUpdater.on(config.updateEvents.UPDATE_ERROR, () => {
+  dialog.showErrorBox(
+    config.updateDialogsSettings.title, config.updateDialogsSettings.messages.error_message);
+}).on(config.updateEvents.CHECKING_FOR_UPDATES, () => {
+  dialog.showMessageBox({
+    type: 'info',
+    title: config.updateDialogsSettings.title,
+    message: config.updateDialogsSettings.messages.check_message
+  });
+}).on(config.updateEvents.UPDATE_NOT_AVAILABLE, info => {
+}).on(config.updateEvents.UPDATE_AVAILABLE, info => {
+  dialog.showMessageBox({
+    type: 'info',
+    title: config.updateDialogsSettings.title,
+    message: config.updateDialogsSettings.messages.avail_message
+  });
+}).on(config.updateEvents.DOWNLOAD_PROGRESS, progressObj => {
+  dialog.showMessageBox({
+    type: 'info',
+    title: config.updateDialogsSettings.title,
+    message: config.updateDialogsSettings.messages.prog_message
+  });
+}).on(config.updateEvents.UPDATE_DOWNLOADED, info => {
+  dialog.showMessageBox({
+    type: 'info',
+    title: config.updateDialogsSettings.title,
+    message: config.updateDialogsSettings.messages.finished_message
+  });
+}).on(config.updateEvents.UPDATE_DOWNLOADED, info => {
+  autoUpdater.quitAndInstall();
+});

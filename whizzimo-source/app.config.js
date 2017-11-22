@@ -59,8 +59,8 @@ module.exports = function () {
         },
 
         errorBoxSettings: {
-            title: `${title} got broke`,
-            content: `${title} will now close`
+            title: `${title} will now close.`,
+            content: `${title} encountered an error and needs to close.`
         },
 
         /**
@@ -79,7 +79,6 @@ module.exports = function () {
                 minWidth: config.dimensions.width,
                 minHeight: config.dimensions.height,
                 icon: config.icoPath,
-                autoHideMenuBar: true,
                 webPreferences: {
                     nodeIntegration: false,
                     webSecurity: false,
@@ -97,6 +96,8 @@ module.exports = function () {
             storages: ['appcache'],
             quotas: ['persistant']
         },
+
+        updateURL: 'https://edu.whizzimo.com/app/',
 
         /**
          * Environment Vars
@@ -155,7 +156,7 @@ module.exports = function () {
                 n_avail_message: 'Update not available',
                 error_message: 'Error in auto updater',
                 prog_message: 'Download in progess...',
-                finished_message: `Update downloaded!\nNow wait patiently as ${title} updates in the background!`
+                finished_message: `Update downloaded!\nProceed to install ${title}!`
             }
         },
         

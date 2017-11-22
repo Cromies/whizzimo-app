@@ -94,7 +94,7 @@ const getMenuTemplate = (window, app) => {
               type: 'info',
               title: `${config.title}`,
               message: `${config.title}`,
-              detail: `Version: ${app.getVersion()}`,
+              detail: `Version: ${app.getVersion()}.\nfixed update checker`,
               buttons: ['Close']
             });
           }
