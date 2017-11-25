@@ -1,14 +1,12 @@
 const {
-    app,
+  app,
   BrowserWindow,
   dialog,
   Menu,
-  Tray,
   globalShortcut,
   autoUpdater
   } = require('electron'),
   MenuTemplate = require('./templates/menu.template'),
-  tray = require('./templates/trayMenu.template'),
   path = require('path'),
   renderer = require('./renderer');
 
@@ -105,7 +103,7 @@ async function createWindow() {
   
   Menu.setApplicationMenu(menu);
 
-  await renderer.renderUI(mainWindow);
+  renderer.renderUI(mainWindow);
 
   autoUpdater.checkForUpdates();
 };
@@ -148,12 +146,11 @@ async function loadEventHandlers() {
 
   // Emitted when the window is closed.
   await mainWindow.on(config.events.CLOSED, () => {
-    // Dereference the window object and the tray object, usually you would store windows
+    // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     app.removeAllListeners();
     mainWindow.removeAllListeners();
-    trayIcon = null;
     config.errorUrl = null;
     config.events = null;
     config.env = null;
@@ -218,22 +215,24 @@ async function loadEventHandlers() {
 
 app.on(config.events.READY, createWindow)
 
+/**
+ * Auto Update Events
+ */
 autoUpdater.on(config.updateEvents.UPDATE_ERROR, () => {
   dialog.showErrorBox(
     config.updateDialogsSettings.title, config.updateDialogsSettings.messages.error_message);
 }).on(config.updateEvents.CHECKING_FOR_UPDATES, () => {
-  dialog.showMessageBox({
-    type: 'info',
-    title: config.updateDialogsSettings.title,
-    message: config.updateDialogsSettings.messages.check_message
-  });
 }).on(config.updateEvents.UPDATE_NOT_AVAILABLE, info => {
 }).on(config.updateEvents.UPDATE_AVAILABLE, info => {
   dialog.showMessageBox({
     type: 'info',
     title: config.updateDialogsSettings.title,
-    message: config.updateDialogsSettings.messages.avail_message
+    message: config.updateDialogsSettings.messages.avail_message,
+    buttons: ['Yes', 'No']
+  }, (index) => {
+    if (index === 0) autoUpdater.emit(config.updateEvents.DOWNLOAD_PROGRESS);
   });
+
 }).on(config.updateEvents.DOWNLOAD_PROGRESS, progressObj => {
   dialog.showMessageBox({
     type: 'info',

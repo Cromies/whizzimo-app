@@ -1,7 +1,7 @@
 /*
 * Construct the menu template for the main window
 */
-const { BrowserWindow, shell, dialog} = require('electron'),
+const { BrowserWindow, shell, dialog } = require('electron'),
   renderer = require('../renderer');
 
 const config = require('../app.config')();
@@ -94,7 +94,7 @@ const getMenuTemplate = (window, app) => {
               type: 'info',
               title: `${config.title}`,
               message: `${config.title}`,
-              detail: `Version: ${app.getVersion()}.\nfixed update checker`,
+              detail: `Version: ${app.getVersion()}.\n\nChanges:\n\r-fixed update checker.\n-Got rid of tray icon (experimental)`,
               buttons: ['Close']
             });
           }

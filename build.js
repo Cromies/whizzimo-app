@@ -5,7 +5,7 @@ installer.createWindowsInstaller({
     outputDirectory: './whizzimo-installer/',
     authors: 'Whizzimo, LLC',
     exe: 'Whizzimo.exe',
-    version: '1.0.5',
+    version: '1.0.6',
     title: 'Whizzimo Desktop',
     name: 'com.prolificrew.whizzimo',
     certificateFile: './whizzimo-source/certs/whizzimo.pfx',

@@ -1,3 +1,4 @@
+/*
 const renderer = require('../renderer');
 
 const getTrayMenuTemplate = (app, win) => {
@@ -26,3 +27,4 @@ const getTrayMenuTemplate = (app, win) => {
 };
 
 module.exports = { getTrayMenuTemplate };
+*/

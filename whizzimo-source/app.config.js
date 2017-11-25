@@ -1,3 +1,6 @@
+/**
+ * Application Configuration Settings
+ */
 const path = require('path'),
     url = require('url');    
 
