@@ -2,7 +2,7 @@ const url = require('url'),
     https = require('https'),
     path = require('path');
     
-const config = require('./app.config')();
+const config = require('./util/app.config')();
 
 const renderUI = (window, page = config.env.MAIN_PAGE) => { 
     https.get(url.parse(page), (res) => {

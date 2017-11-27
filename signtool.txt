@@ -1,0 +1,1 @@
+signtool sign /f {__dirname}\whizzimo-app\whizzimo-source\certs\whizzimo.pfx /p Whizzardedu@7851 /tr http://tsa.starfieldtech.com /td SHA256 {__dirname}whizzimo-app\whizzimo-installer\Whizzimo-Setup.exe

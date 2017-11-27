@@ -4,7 +4,7 @@
 const { BrowserWindow, shell, dialog } = require('electron'),
   renderer = require('../renderer');
 
-const config = require('../app.config')();
+const config = require('../util/app.config')();
 
 const getMenuTemplate = (window, app) => { 
   let template = [
@@ -93,7 +93,7 @@ const getMenuTemplate = (window, app) => {
             dialog.showMessageBox({
               type: 'info',
               title: `${config.title}`,
-              message: `${config.title}`,
+              message: `About ${config.title}`,
               detail: `Version: ${app.getVersion()}.\n\nChanges:\n\r-fixed update checker.\n-Got rid of tray icon (experimental)`,
               buttons: ['Close']
             });

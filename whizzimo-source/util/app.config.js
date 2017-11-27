@@ -100,8 +100,6 @@ module.exports = function () {
             quotas: ['persistant']
         },
 
-        updateURL: 'https://edu.whizzimo.com/app/',
-
         /**
          * Environment Vars
          */
@@ -137,6 +135,15 @@ module.exports = function () {
         },
 
         /**
+         * Updater Settings
+         */
+        updateSettings: {
+            url: 'https://edu.whizzimo.com/app/',
+            autoDownload: false,
+            allowDowngrade: false,
+            allowPrerelease: false,
+        },
+        /**
          * Update Events
          */
         updateEvents: {
@@ -155,11 +162,15 @@ module.exports = function () {
             title: 'Updates',
             messages: {
                 check_message: 'Checking for updates...',
-                avail_message: 'Updates are available',
+                avail_message: 'Updates are available!\nWould you like to download updates now or later?',
                 n_avail_message: 'Update not available',
                 error_message: 'Error in auto updater',
                 prog_message: 'Download in progess...',
-                finished_message: `Update downloaded!\nProceed to install ${title}!`
+                finished_message: `Update downloaded!\nWould you like to restart ${title} to apply update?`
+            },
+            buttons: {
+                avail_diag: ['Install Now', 'Install Later'],
+                down_diag: ['Yes. Install Now!', 'No. Install on Restart']
             }
         },
         

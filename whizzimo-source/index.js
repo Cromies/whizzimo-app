@@ -3,14 +3,14 @@ const {
   BrowserWindow,
   dialog,
   Menu,
-  globalShortcut,
-  autoUpdater
+  globalShortcut
   } = require('electron'),
-  MenuTemplate = require('./templates/menu.template'),
-  path = require('path'),
-  renderer = require('./renderer');
+MenuTemplate = require('./templates/menu.template'),
+path = require('path'),
+renderer = require('./renderer'),
+updater = require('./util/autoupdater');
 
-const config = require('./app.config')();
+const config = require('./util/app.config')();
 
 // this should be placed at top of main.js to handle setup events quickly
 if (handleSquirrelEvent(app)) {
@@ -88,8 +88,6 @@ function handleSquirrelEvent(application) {
 let mainWindow;
 
 async function createWindow() {
-  autoUpdater.setFeedURL(config.updateURL);
-
   mainWindow = new BrowserWindow
     (config.getElectronWindowSettings());
   
@@ -105,7 +103,7 @@ async function createWindow() {
 
   renderer.renderUI(mainWindow);
 
-  autoUpdater.checkForUpdates();
+  updater.applyUpdater();
 };
 
 // Clears the Storage Caches
@@ -151,8 +149,10 @@ async function loadEventHandlers() {
     // when you should delete the corresponding element.
     app.removeAllListeners();
     mainWindow.removeAllListeners();
+    updater.removeUpdateListeners();
     config.errorUrl = null;
     config.events = null;
+    config.updateEvents = null;
     config.env = null;
     mainWindow = null;
     if (typeof global.gc !== 'undefined') {
@@ -214,37 +214,3 @@ async function loadEventHandlers() {
 // Some APIs can only be used after this event occurs.
 
 app.on(config.events.READY, createWindow)
-
-/**
- * Auto Update Events
- */
-autoUpdater.on(config.updateEvents.UPDATE_ERROR, () => {
-  dialog.showErrorBox(
-    config.updateDialogsSettings.title, config.updateDialogsSettings.messages.error_message);
-}).on(config.updateEvents.CHECKING_FOR_UPDATES, () => {
-}).on(config.updateEvents.UPDATE_NOT_AVAILABLE, info => {
-}).on(config.updateEvents.UPDATE_AVAILABLE, info => {
-  dialog.showMessageBox({
-    type: 'info',
-    title: config.updateDialogsSettings.title,
-    message: config.updateDialogsSettings.messages.avail_message,
-    buttons: ['Yes', 'No']
-  }, (index) => {
-    if (index === 0) autoUpdater.emit(config.updateEvents.DOWNLOAD_PROGRESS);
-  });
-
-}).on(config.updateEvents.DOWNLOAD_PROGRESS, progressObj => {
-  dialog.showMessageBox({
-    type: 'info',
-    title: config.updateDialogsSettings.title,
-    message: config.updateDialogsSettings.messages.prog_message
-  });
-}).on(config.updateEvents.UPDATE_DOWNLOADED, info => {
-  dialog.showMessageBox({
-    type: 'info',
-    title: config.updateDialogsSettings.title,
-    message: config.updateDialogsSettings.messages.finished_message
-  });
-}).on(config.updateEvents.UPDATE_DOWNLOADED, info => {
-  autoUpdater.quitAndInstall();
-});
