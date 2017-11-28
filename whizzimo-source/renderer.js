@@ -2,7 +2,7 @@ const url = require('url'),
     https = require('https'),
     path = require('path');
     
-const config = require('./util/app.config')();
+const config = require('./app.config')();
 
 const renderUI = (window, page = config.env.MAIN_PAGE) => { 
     https.get(url.parse(page), (res) => {
@@ -16,7 +16,7 @@ const renderUI = (window, page = config.env.MAIN_PAGE) => {
     });   
 };
 
-const checkConnection = (window) => {
+const checkConnection = window => {
     https.get(url.parse(config.env.MAIN_PAGE), (res) => {
         if (window.webContents.getURL() === config.errorUrl &&
             res.statusCode === 200) {
@@ -37,11 +37,11 @@ const checkConnection = (window) => {
     });
 };
 
-const getErrorWindow = (window) => {
+const getErrorWindow = window => {
     window.loadURL(config.errorUrl);
 };
 
-const closeApp = (app) => {
+const closeApp = app => {
     // On OS X it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== config.env.DARWIN) {

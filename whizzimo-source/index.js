@@ -10,7 +10,7 @@ path = require('path'),
 renderer = require('./renderer'),
 updater = require('./util/autoupdater');
 
-const config = require('./util/app.config')();
+const config = require('./app.config')();
 
 // this should be placed at top of main.js to handle setup events quickly
 if (handleSquirrelEvent(app)) {
@@ -101,9 +101,9 @@ async function createWindow() {
   
   Menu.setApplicationMenu(menu);
 
-  renderer.renderUI(mainWindow);
+  await renderer.renderUI(mainWindow);
 
-  updater.applyUpdater();
+  //updater.applyUpdater();
 };
 
 // Clears the Storage Caches

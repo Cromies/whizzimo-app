@@ -7,11 +7,11 @@ const path = require('path'),
 module.exports = function () {
     const iconsPath = './icons/';
     const title = 'Whizzimo';
-    let errorUrl = url.parse(url.format({
+    const errorUrl = url.format({
         pathname: path.join(__dirname, 'error.html'),
         protocol: 'file:',
         slashes: true
-    })).href;
+    });
 
     const config = {
         title: title,

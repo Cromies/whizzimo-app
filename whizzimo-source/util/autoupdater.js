@@ -1,16 +1,11 @@
-const { dialog } = require('electron');
-const { autoUpdater } = require('electron-updater');
-const config = require('../util/app.config')();
+const { dialog, autoUpdater } = require('electron');
+const config = require('../app.config')();
 
 async function applyUpdater() {
   /**
    * Apply configuration Settings
    */
   autoUpdater.setFeedURL(config.updateSettings.url);
-  autoUpdater.autoDownload = config.updateSettings.autoDownload;
-  autoUpdater.allowDowngrade = config.updateSettings.allowDowngrade;
-  autoUpdater.allowPrerelease = config.updateSettings.allowPrerelease;
-
     /**
      * Auto Update Events
      */
@@ -21,17 +16,6 @@ async function applyUpdater() {
   }).on(config.updateEvents.CHECKING_FOR_UPDATES, () => {
   }).on(config.updateEvents.UPDATE_NOT_AVAILABLE, info => {
   }).on(config.updateEvents.UPDATE_AVAILABLE, info => {
-    dialog.showMessageBox({
-      type: 'info',
-      title: config.updateDialogsSettings.title,
-      message: config.updateDialogsSettings.messages.avail_message,
-      buttons: config.updateDialogsSettings.buttons.avail_diag
-    }, response => {
-      if (response === 0) {
-        autoUpdater.downloadUpdate()
-      };
-    });
-
   }).on(config.updateEvents.DOWNLOAD_PROGRESS, progressObj => {
   }).on(config.updateEvents.UPDATE_DOWNLOADED, (event, releaseNotes, releaseName) => {
     dialog.showMessageBox({
