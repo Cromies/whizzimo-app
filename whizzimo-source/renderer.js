@@ -4,6 +4,11 @@ const url = require('url'),
     
 const config = require('./app.config')();
 
+/**
+ * Renders a page in the renderer process
+ * @param {Electron.BrowserWindow} window 
+ * @param {URL} page 
+ */
 const renderUI = (window, page = config.env.MAIN_PAGE) => { 
     https.get(url.parse(page), (res) => {
         if (res.statusCode === 200) {
@@ -16,6 +21,10 @@ const renderUI = (window, page = config.env.MAIN_PAGE) => {
     });   
 };
 
+/**
+ * Checks for a connection to the server
+ * @param {Electron.BrowserWindow} window 
+ */
 const checkConnection = window => {
     https.get(url.parse(config.env.MAIN_PAGE), (res) => {
         if (window.webContents.getURL() === config.errorUrl &&
