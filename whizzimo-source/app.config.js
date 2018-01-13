@@ -109,7 +109,7 @@ module.exports = function () {
             URL: 'https://edu.whizzimo.com/#/login',
             HOME_URL: 'http://www.whizzimo.com/',
             ABOUT_URL: 'http://www.whizzimo.com/features.html',
-            MAIN_PAGE: 'https://edu.whizzimo.com/#/mycurriculum',
+            MAIN_PAGE: 'https://edu.whizzimo.com',
             DARWIN: 'darwin'
         },
 
