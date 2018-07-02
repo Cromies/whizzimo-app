@@ -5,16 +5,18 @@ const {
   BrowserWindow,
   shell,
   dialog
-} = require('electron'),
-  renderer = require('../renderer');
+} = require("electron"),
+  renderer = require("../renderer"), {
+    checkUpdates
+  } = require('../util/autoupdater');
 
-const config = require('../app.config')();
+const config = require("../app.config")();
 
 const getMenuTemplate = (window, app) => {
   const template = [{
-      label: 'File',
+      label: "File",
       submenu: [{
-        label: 'Close',
+        label: "Close",
         click() {
           if (process.platform === config.env.DARWIN) {
             app.emit(config.events.CLOSED);
@@ -24,23 +26,23 @@ const getMenuTemplate = (window, app) => {
       }]
     },
     {
-      label: 'View',
+      label: "View",
       submenu: [{
-          accelerator: 'CmdOrCtrl+=',
-          role: 'zoomin'
+          accelerator: "CmdOrCtrl+=",
+          role: "zoomin"
         },
         {
-          role: 'zoomout'
+          role: "zoomout"
         },
         {
-          label: 'Refresh',
-          accelerator: 'CmdOrCtrl+R',
+          label: "Refresh",
+          accelerator: "CmdOrCtrl+R",
           click() {
             if (window) {
-              // on reload start fresh and close any 
+              // on reload start fresh and close any
               // old open secondary windows
               if (window.id === 1) {
-                BrowserWindow.getAllWindows().forEach((win) => {
+                BrowserWindow.getAllWindows().forEach(win => {
                   if (win.id > 1) {
                     win.close();
                   }
@@ -51,35 +53,34 @@ const getMenuTemplate = (window, app) => {
           }
         },
         {
-          label: 'Toggle Full Screen',
+          label: "Toggle Full Screen",
           accelerator: (() => {
             if (process.platform === config.env.DARWIN) {
-              return 'Ctrl+Cmd+F';
+              return "Ctrl+Cmd+F";
             }
 
-            return 'F11';
-
+            return "F11";
           })(),
           click(item, focusedWindow) {
             if (focusedWindow) {
-              focusedWindow.setFullScreen(!focusedWindow.isFullScreen())
+              focusedWindow.setFullScreen(!focusedWindow.isFullScreen());
             }
           }
         }
       ]
     },
     {
-      label: 'Window',
-      role: 'window',
+      label: "Window",
+      role: "window",
       submenu: [{
-        label: 'Minimize',
-        accelerator: 'CmdOrCtrl+M',
-        role: 'minimize'
-      }, ]
+        label: "Minimize",
+        accelerator: "CmdOrCtrl+M",
+        role: "minimize"
+      }]
     },
     {
-      label: 'Help',
-      role: 'help',
+      label: "Help",
+      role: "help",
       submenu: [{
           label: `Learn more about ${config.title}`,
           click() {
@@ -87,20 +88,36 @@ const getMenuTemplate = (window, app) => {
           }
         },
         {
-          label: 'About',
+          label: "About",
           click() {
             dialog.showMessageBox(window, {
-              type: 'info',
+              type: "info",
               title: `${config.title}`,
               message: `About ${config.title}`,
               detail: `Version: ${app.getVersion()}.
 Changes:
-  -fixed:
-    -update error dialog removed.
-    -Title not appearing on Window.
-    -Website not showing when internet reconnected.`,
-              buttons: ['Close']
+  - fixed:
+    - updater fixes.
+    - other bug fixes`,
+              buttons: ["Close"]
             });
+          }
+        },
+        {
+          label: "Toggle Developer Tools",
+          accelerator: "CmdOrCtrl+Shift+I",
+          click(item, focusedWindow) {
+            if (focusedWindow) {
+              focusedWindow.toggleDevTools()
+            }
+          },
+          visible: false
+        },
+        {
+          label: "Check for Updates",
+          key: "checkForUpdates",
+          click() {
+            checkUpdates();
           }
         }
       ]

@@ -37,7 +37,7 @@ To create tests for the app use the [Mocha](http://mochajs.org/) and [Chai](http
 
 ## Building the app
 
-use the `npm run pack` command on the `whizzimo-source` directory then use go back to the `whizzimo-app` directory and run `npm run build` to build the installer and update file for the updated app.
+use the `npm run pack` command on the `whizzimo-source` directory then go to the `dist\win-unpacked` folder in `whizzimo-source`. You should find a `LICENSE.element.txt` and rename that to `LICENSE`. Next, go back to the `whizzimo-app` directory and run `npm run build` to build the installer and update file for the updated app.
 
 ## References
 

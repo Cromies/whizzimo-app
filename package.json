@@ -1,6 +1,6 @@
 {
   "name": "whizzimo-app",
-  "version": "1.0.13",
+  "version": "1.0.23",
   "description": "",
   "main": "index.js",
   "dependencies": {

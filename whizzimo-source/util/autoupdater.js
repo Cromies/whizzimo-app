@@ -15,6 +15,13 @@ function applyUpdater(window) {
   autoUpdater.on(config.updateEvents.UPDATE_ERROR, () => {
       // updater encounters an error either by internet disconnect
     })
+    .on(config.updateEvents.UPDATE_NOT_AVAILABLE, () => {
+      dialog.showMessageBox(window, {
+        type: 'info',
+        title: config.updateDialogsSettings.title,
+        message: config.updateDialogsSettings.messages.n_avail_message
+      });
+    })
     .on(config.updateEvents.UPDATE_DOWNLOADED, (event, releaseNotes, releaseName) => {
       dialog.showMessageBox(window, {
         type: 'info',
@@ -27,15 +34,17 @@ function applyUpdater(window) {
         }
       });
     });
-
-  autoUpdater.checkForUpdates();
 }
 
 function removeUpdateListeners() {
   autoUpdater.removeAllListeners();
 }
 
+function checkUpdates() {
+  autoUpdater.checkForUpdates();
+}
 module.exports = {
+  checkUpdates,
   applyUpdater,
   removeUpdateListeners
 };
