@@ -2,7 +2,7 @@
  * Application Configuration Settings
  */
 const path = require('path'),
-    url = require('url');    
+    url = require('url');
 
 module.exports = function () {
     const iconsPath = './icons/';
@@ -11,11 +11,11 @@ module.exports = function () {
         pathname: path.join(__dirname, 'error.html'),
         protocol: 'file:',
         slashes: true
-    });
+    }).replace(/\\/g, "/");
 
     const config = {
         title: title,
-        
+
         /**
          * Tool Tip Settings
          */
@@ -52,8 +52,8 @@ module.exports = function () {
         preventUnloadSettings: {
             type: 'question',
             buttons: [
-              'Leave',
-              'Stay'
+                'Leave',
+                'Stay'
             ],
             title: 'Do you want to leave this site?',
             message: 'Changes you made may not be saved.',
@@ -104,8 +104,6 @@ module.exports = function () {
          * Environment Vars
          */
         env: {
-            LOGIN: 'testsuperheroplus@whizzimo.com',
-            PASS: 'words',
             URL: 'https://edu.whizzimo.com/#/login',
             HOME_URL: 'http://www.whizzimo.com/',
             ABOUT_URL: 'http://www.whizzimo.com/features.html',
@@ -131,7 +129,9 @@ module.exports = function () {
             DID_FAIL_LOAD: 'did-fail-load',
             DID_FINISH_LOAD: 'did-finish-load',
             WILL_QUIT: 'will-quit',
-            WILL_DOWNLOAD: 'will-download'
+            WILL_DOWNLOAD: 'will-download',
+            PAGE_TITLE_UPDATED: 'page-title-updated',
+            DID_FRAME_FINISH_LOAD: 'did-frame-finish-load'
         },
 
         /**
@@ -173,7 +173,7 @@ module.exports = function () {
                 down_diag: ['Yes. Install Now!', 'No. Install on Restart']
             }
         },
-        
+
         /**
          * Error Page
          */

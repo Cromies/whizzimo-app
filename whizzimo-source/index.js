@@ -4,11 +4,11 @@ const {
   dialog,
   Menu,
   globalShortcut
-  } = require('electron'),
-MenuTemplate = require('./templates/menu.template'),
-path = require('path'),
-renderer = require('./renderer'),
-updater = require('./util/autoupdater');
+} = require('electron'),
+  MenuTemplate = require('./templates/menu.template'),
+  path = require('path'),
+  renderer = require('./renderer'),
+  updater = require('./util/autoupdater');
 
 const config = require('./app.config')();
 
@@ -22,7 +22,7 @@ if (handleSquirrelEvent(app)) {
 // code. You can also put them in separate files and require them here.
 function handleSquirrelEvent(application) {
   if (process.argv.length === 1) {
-      return false;
+    return false;
   }
 
   const ChildProcess = require('child_process');
@@ -32,54 +32,54 @@ function handleSquirrelEvent(application) {
   const updateDotExe = path.resolve(path.join(rootAtomFolder, 'Update.exe'));
   const exeName = path.basename(process.execPath);
 
-  const spawn = function(command, args) {
-      let spawnedProcess, error;
+  const spawn = function (command, args) {
+    let spawnedProcess, error;
 
-      try {
-          spawnedProcess = ChildProcess.spawn(command, args, {
-              detached: true
-          });
-      } catch (error) {}
+    try {
+      spawnedProcess = ChildProcess.spawn(command, args, {
+        detached: true
+      });
+    } catch (error) {}
 
-      return spawnedProcess;
+    return spawnedProcess;
   };
 
-  const spawnUpdate = function(args) {
-      return spawn(updateDotExe, args);
+  const spawnUpdate = function (args) {
+    return spawn(updateDotExe, args);
   };
 
   const squirrelEvent = process.argv[1];
   switch (squirrelEvent) {
-      case '--squirrel-install':
-      case '--squirrel-updated':
-          // Optionally do things such as:
-          // - Add your .exe to the PATH
-          // - Write to the registry for things like file associations and
-          //   explorer context menus
+    case '--squirrel-install':
+    case '--squirrel-updated':
+      // Optionally do things such as:
+      // - Add your .exe to the PATH
+      // - Write to the registry for things like file associations and
+      //   explorer context menus
 
-          // Install desktop and start menu shortcuts
-          spawnUpdate(['--createShortcut', exeName]);
+      // Install desktop and start menu shortcuts
+      spawnUpdate(['--createShortcut', exeName]);
 
-          setTimeout(application.quit, 1000);
-          return true;
+      setTimeout(application.quit, 1000);
+      return true;
 
-      case '--squirrel-uninstall':
-          // Undo anything you did in the --squirrel-install and
-          // --squirrel-updated handlers
+    case '--squirrel-uninstall':
+      // Undo anything you did in the --squirrel-install and
+      // --squirrel-updated handlers
 
-          // Remove desktop and start menu shortcuts
-          spawnUpdate(['--removeShortcut', exeName]);
+      // Remove desktop and start menu shortcuts
+      spawnUpdate(['--removeShortcut', exeName]);
 
-          setTimeout(application.quit, 1000);
-          return true;
+      setTimeout(application.quit, 1000);
+      return true;
 
-      case '--squirrel-obsolete':
-          // This is called on the outgoing version of your app before
-          // we update to the new version - it's the opposite of
-          // --squirrel-updated
+    case '--squirrel-obsolete':
+      // This is called on the outgoing version of your app before
+      // we update to the new version - it's the opposite of
+      // --squirrel-updated
 
-          application.quit();
-          return true;
+      application.quit();
+      return true;
   }
 };
 
@@ -88,33 +88,30 @@ function handleSquirrelEvent(application) {
 let mainWindow;
 
 async function createWindow() {
-  mainWindow = new BrowserWindow
-    (config.getElectronWindowSettings());
-  
+  mainWindow = new BrowserWindow(config.getElectronWindowSettings());
+
   await clearCaches();
 
   loadEventHandlers();
 
   // build and set the menubar for the app
-  const menu = await Menu.buildFromTemplate(MenuTemplate.
-    getMenuTemplate(mainWindow, app));
-  
+  const menu = await Menu.buildFromTemplate(MenuTemplate.getMenuTemplate(mainWindow, app));
+
   Menu.setApplicationMenu(menu);
 
   await renderer.renderUI(mainWindow);
 
-  //updater.applyUpdater();
+  //updater.applyUpdater(mainWindow);
 };
 
 // Clears the Storage Caches
-async function clearCaches () {
-  mainWindow.webContents.session.
-    clearStorageData(config.cacheSettings);
+async function clearCaches() {
+  mainWindow.webContents.session.clearStorageData(config.cacheSettings);
 };
 
 // Load the Event Handlers of the app and mainWindow
 async function loadEventHandlers() {
-  
+
   const handlediag = (index) => {
     if (index === 0) {
       mainWindow.reload();
@@ -125,16 +122,16 @@ async function loadEventHandlers() {
 
   // handles the crashed event
   await mainWindow.webContents.on(config.events.CRASHED, () => {
-    dialog.showMessageBox(config.crashedDialogSettings, handlediag(index));
-  });  
+    dialog.showMessageBox(mainWindow, config.crashedDialogSettings, handlediag(index));
+  });
 
   // Emitted when an unresponsive event occurs
   await mainWindow.on(config.events.UNRESPONSIVE, () => {
-    dialog.showMessageBox(config.unresponsiveDialogSettings, handlediag(index));   
+    dialog.showMessageBox(mainWindow, config.unresponsiveDialogSettings, handlediag(index));
   });
 
   // Emitted when an exception occurs (error handling)
-  await process.on(config.events.UNCAUGHT_EXCEPTION, () => { 
+  await process.on(config.events.UNCAUGHT_EXCEPTION, () => {
     dialog.showErrorBox(
       config.errorBoxSettings.title,
       config.errorBoxSettings.content
@@ -160,22 +157,25 @@ async function loadEventHandlers() {
     }
   });
 
-  await mainWindow.webContents.on(config.events.DID_FAIL_LOAD, () => { 
-    renderer.getErrorWindow(mainWindow);
+  await mainWindow.webContents.on(config.events.DID_FAIL_LOAD, (event, errorCode, errorDescription) => {
+    event.preventDefault();
+    if (errorDescription === 'ERR_INTERNET_DISCONNECTED') {
+      renderer.getErrorWindow(mainWindow);
+    }
   });
 
   await mainWindow.webContents.on(config.events.WILL_PREVENT_UNLOAD,
     (event) => {
       const choice = dialog.showMessageBox(mainWindow,
-      config.preventUnloadSettings)
-    const leave = choice === 0;
-    if (leave) {
-      event.preventDefault()
-    }
-  });
+        config.preventUnloadSettings)
+      const leave = choice === 0;
+      if (leave) {
+        event.preventDefault()
+      }
+    });
 
-  await mainWindow.on(config.events.RESPONSIVE, () => { 
-      mainWindow.reload();
+  await mainWindow.on(config.events.RESPONSIVE, () => {
+    mainWindow.reload();
   });
 
   // Quit when all windows are closed.
@@ -184,6 +184,10 @@ async function loadEventHandlers() {
       app.quit();
     }
   });
+
+  mainWindow.on(config.events.PAGE_TITLE_UPDATED, (event) => {
+    event.preventDefault();
+  })
 
   await app.on(config.events.ACTIVATE, () => {
     // On OS X it's common to re-create a window in the app when the

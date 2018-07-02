@@ -1,7 +1,7 @@
 const url = require('url'),
     https = require('https'),
     path = require('path');
-    
+
 const config = require('./app.config')();
 
 /**
@@ -9,8 +9,8 @@ const config = require('./app.config')();
  * @param {Electron.BrowserWindow} window 
  * @param {URL} page 
  */
-const renderUI = (window, page = config.env.MAIN_PAGE) => { 
-    https.get(url.parse(page), (res) => {
+const renderUI = (window, page = config.env.MAIN_PAGE) => {
+    https.get(page, (res) => {
         if (res.statusCode === 200) {
             window.loadURL(page);
         } else {
@@ -18,7 +18,7 @@ const renderUI = (window, page = config.env.MAIN_PAGE) => {
         }
     }).on('error', () => {
         getErrorWindow(window);
-    });   
+    });
 };
 
 /**
@@ -57,7 +57,7 @@ const closeApp = app => {
         app.quit();
     }
 };
-  
+
 module.exports = {
     renderUI,
     closeApp,
