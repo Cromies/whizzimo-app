@@ -90,17 +90,7 @@ const getMenuTemplate = (window, app) => {
         {
           label: "About",
           click() {
-            dialog.showMessageBox(window, {
-              type: "info",
-              title: `${config.title}`,
-              message: `About ${config.title}`,
-              detail: `Version: ${app.getVersion()}.
-Changes:
-  - fixed:
-    - updater fixes.
-    - other bug fixes`,
-              buttons: ["Close"]
-            });
+            dialog.showMessageBox(window, config.aboutDiagSettings(app));
           }
         },
         {

@@ -16,19 +16,10 @@ function applyUpdater(window) {
       // updater encounters an error either by internet disconnect
     })
     .on(config.updateEvents.UPDATE_NOT_AVAILABLE, () => {
-      dialog.showMessageBox(window, {
-        type: 'info',
-        title: config.updateDialogsSettings.title,
-        message: config.updateDialogsSettings.messages.n_avail_message
-      });
+      dialog.showMessageBox(window, config.updateNotAvailableSettings);
     })
     .on(config.updateEvents.UPDATE_DOWNLOADED, (event, releaseNotes, releaseName) => {
-      dialog.showMessageBox(window, {
-        type: 'info',
-        title: config.updateDialogsSettings.title,
-        message: config.updateDialogsSettings.messages.finished_message,
-        buttons: config.updateDialogsSettings.buttons.down_diag
-      }, response => {
+      dialog.showMessageBox(window, config.updateDownloadedSettings, response => {
         if (response === 0) {
           setTimeout(() => autoUpdater.quitAndInstall(), 1);
         }

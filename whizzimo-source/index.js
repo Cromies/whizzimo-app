@@ -3,7 +3,8 @@ const {
   BrowserWindow,
   dialog,
   Menu,
-  globalShortcut
+  globalShortcut,
+  session
 } = require('electron'),
   MenuTemplate = require('./templates/menu.template'),
   path = require('path'),

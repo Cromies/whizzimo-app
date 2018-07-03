@@ -13,7 +13,7 @@ module.exports = function () {
         slashes: true
     }).replace(/\\/g, "/");
 
-    const config = {
+    return Object.freeze({
         title: title,
 
         /**
@@ -66,6 +66,20 @@ module.exports = function () {
             content: `${title} encountered an error and needs to close.`
         },
 
+        aboutDiagSettings(app) {
+            return {
+                type: "info",
+                title: `${this.title}`,
+                message: `About ${this.title}`,
+                detail: `Version: ${app.getVersion()}.
+Changes:
+- fixed:
+    - updater fixes.
+    - other bug fixes`,
+                buttons: ["Close"]
+            };
+        },
+
         /**
          * Window settings
          */
@@ -77,16 +91,14 @@ module.exports = function () {
         getElectronWindowSettings() {
             return {
                 title: title,
-                width: config.dimensions.width,
-                height: config.dimensions.height,
-                minWidth: config.dimensions.width,
-                minHeight: config.dimensions.height,
-                icon: config.icoPath,
+                width: this.dimensions.width,
+                height: this.dimensions.height,
+                minWidth: this.dimensions.width,
+                minHeight: this.dimensions.height,
+                icon: this.icoPath,
                 webPreferences: {
                     nodeIntegration: false,
-                    webSecurity: false,
                     zoomFactor: 0.8,
-                    allowRunningInsecureContent: true
                 },
                 show: false
             };
@@ -107,7 +119,7 @@ module.exports = function () {
             URL: 'https://edu.whizzimo.com/#/login',
             HOME_URL: 'http://www.whizzimo.com/',
             ABOUT_URL: 'http://www.whizzimo.com/features.html',
-            MAIN_PAGE: 'https://edu.whizzimo.com',
+            MAIN_PAGE: 'https://edu.whizzimo.com/',
             DARWIN: 'darwin'
         },
 
@@ -158,20 +170,17 @@ module.exports = function () {
         /**
          * Update dialogs config
          */
-        updateDialogsSettings: {
+        updateNotAvailableSettings: {
+            type: 'info',
             title: 'Updates',
-            messages: {
-                check_message: 'Checking for updates...',
-                avail_message: 'Updates are available!\nWould you like to download updates now or later?',
-                n_avail_message: 'Update not available',
-                error_message: 'Error in auto updater',
-                prog_message: 'Download in progess...',
-                finished_message: `Update downloaded!\nWould you like to restart ${title} to apply update?`
-            },
-            buttons: {
-                avail_diag: ['Install Now', 'Install Later'],
-                down_diag: ['Yes. Install Now!', 'No. Install on Restart']
-            }
+            message: `Update for ${title} not available`
+        },
+
+        updateDownloadedSettings: {
+            type: 'info',
+            title: 'Updates',
+            message: `Update downloaded!\nWould you like to restart ${title} to apply update?`,
+            buttons: ['Yes. Install Now!', 'No. Install on Restart']
         },
 
         /**
@@ -179,7 +188,5 @@ module.exports = function () {
          */
         errorUrl: errorUrl
 
-    };
-
-    return config;
+    });
 }

@@ -18,7 +18,7 @@
   },
   "scripts": {
     "start": "electron .",
-    "debug": "electron --inspect=5858 main.js",
+    "debug": "electron --inspect-brk=5858 index.js",
     "pack": "electron-builder --dir -p always",
     "test": "mocha"
   },
