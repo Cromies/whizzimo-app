@@ -23,8 +23,9 @@ module.exports = function () {
         /**
          * Icons path
          */
-        icoPath: `${iconsPath}icon.ico`,
+        icoPath: process.platform === 'darwin' ? `${iconsPath}icon.icns` : `${iconsPath}icon.ico`,
 
+        Developer_mode: false,
         /**
          * Dialog Settings
          */

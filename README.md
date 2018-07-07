@@ -1,6 +1,6 @@
 # whizzimo-app
 
-Whizzimo Desktop Client for Windows
+Whizzimo Desktop Client for Windows and Mac
 
 # Developers notes
 
@@ -37,7 +37,13 @@ To create tests for the app use the [Mocha](http://mochajs.org/) and [Chai](http
 
 ## Building the app
 
-use the `npm run pack` command on the `whizzimo-source` directory then go to the `dist\win-unpacked` folder in `whizzimo-source`. You should find a `LICENSE.element.txt` and rename that to `LICENSE`. Next, go back to the `whizzimo-app` directory and run `npm run build` to build the installer and update file for the updated app.
+### Windows
+
+use the `npm run pack:win` command on the `whizzimo-source` directory then go to the `dist\win-unpacked` folder in `whizzimo-source`. You should find a `LICENSE.element.txt` and rename that to `LICENSE`. Next, go back to the `whizzimo-app` directory and run `npm run build:win` to build the installer and update file for the updated app.
+
+### Mac
+
+use the `npm run pack:mac` command on the `whizzimo-source` directory to build the .app file. Then go back to the `whizzimo-app` directory and run `npm run build:mac` to build the installer for the updated app.
 
 ## References
 

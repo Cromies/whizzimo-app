@@ -94,16 +94,6 @@ const getMenuTemplate = (window, app) => {
           }
         },
         {
-          label: "Toggle Developer Tools",
-          accelerator: "CmdOrCtrl+Shift+I",
-          click(item, focusedWindow) {
-            if (focusedWindow) {
-              focusedWindow.toggleDevTools()
-            }
-          },
-          visible: false
-        },
-        {
           label: "Check for Updates",
           key: "checkForUpdates",
           click() {
@@ -114,6 +104,26 @@ const getMenuTemplate = (window, app) => {
     }
   ];
 
+  if (config.Developer_mode === true) {
+    template.push({
+      'label': 'Tools',
+      submenu: [{
+        label: "Toggle Developer Tools",
+        accelerator: (() => {
+          if (process.platform === config.env.DARWIN) {
+            return 'Alt+Command+I';
+          } else {
+            return 'Ctrl+Shift+I';
+          }
+        })(),
+        click(item, focusedWindow) {
+          if (focusedWindow) {
+            focusedWindow.toggleDevTools();
+          }
+        }
+      }]
+    })
+  }
   if (process.platform === config.env.DARWIN) {
     template.unshift();
   }

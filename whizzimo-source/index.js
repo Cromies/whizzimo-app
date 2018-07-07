@@ -13,6 +13,9 @@ const {
 
 const config = require('./app.config')();
 
+/**
+ * WINDOWS ONLY
+ */
 // this should be placed at top of main.js to handle setup events quickly
 if (handleSquirrelEvent(app)) {
   // squirrel event handled and app will exit in 1000ms, so don't do anything else

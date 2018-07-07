@@ -1,20 +1,21 @@
 {
   "name": "whizzimo-app",
-  "version": "1.0.23",
+  "version": "1.0.25",
   "description": "",
   "main": "index.js",
   "dependencies": {
     "auto-updater": "^1.0.2",
+    "electron-installer-dmg": "^1.0.0",
     "electron-winstaller": "^2.6.3"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/linuxguy467/whizzimo-app.git"
+    "url": "git+https://github.com/loturner/whizzimo-app.git"
   },
   "devDependencies": {},
   "scripts": {
-    "build": "node build.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:win": "node build.js",
+    "build:mac": "electron-installer-dmg ./release-builds/Whizzimo\\ tutorial\\ app-darwin-x64/Whizzimo\\ tutorial\\ Whizzimo.app electron-tutorial-app"
   },
   "author": "Matthew Hemingway",
   "license": "ISC"
