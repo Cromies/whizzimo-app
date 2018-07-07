@@ -15,7 +15,7 @@
   "devDependencies": {},
   "scripts": {
     "build:win": "node build.js",
-    "build:mac": "electron-installer-dmg ./whizzimo-source/dist/mac/Whizzimo-darwin-x64/Whizzimo.app Whizzimo --out=whizzimo-installer --overwrite --icon=./whizzimo-source/icons/icon.icns"
+    "build:mac": "electron-installer-dmg ./whizzimo-source/dist/mac/Whizzimo-darwin-x64/Whizzimo.app Whizzimo --out=./whizzimo-installer/mac --overwrite --icon=./whizzimo-source/icons/icon.icns --debug=true"
   },
   "author": "Matthew Hemingway",
   "license": "ISC"
