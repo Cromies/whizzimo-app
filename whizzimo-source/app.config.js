@@ -5,7 +5,7 @@ const path = require('path'),
     url = require('url');
 
 module.exports = function () {
-    const iconsPath = './icons/';
+    const iconsPath = path.resolve(__dirname, 'icons');
     const title = 'Whizzimo';
     const errorUrl = url.format({
         pathname: path.join(__dirname, 'error.html'),
@@ -23,7 +23,7 @@ module.exports = function () {
         /**
          * Icons path
          */
-        icoPath: process.platform === 'darwin' ? `${iconsPath}icon.icns` : `${iconsPath}icon.ico`,
+        icoPath: process.platform === 'darwin' ? `${iconsPath}/icon.icns` : `${iconsPath}/icon.ico`,
 
         Developer_mode: false,
         /**
@@ -121,7 +121,8 @@ Changes:
             HOME_URL: 'http://www.whizzimo.com/',
             ABOUT_URL: 'http://www.whizzimo.com/features.html',
             MAIN_PAGE: 'https://edu.whizzimo.com/',
-            DARWIN: 'darwin'
+            DARWIN: 'darwin',
+            WIN: 'win32'
         },
 
         /**

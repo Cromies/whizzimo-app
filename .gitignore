@@ -61,3 +61,5 @@ dist/
 whizzimo-installer/
 
 .vscode/
+
+.DS_Store

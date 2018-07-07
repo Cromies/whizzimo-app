@@ -43,7 +43,7 @@ function handleSquirrelEvent(application) {
       spawnedProcess = ChildProcess.spawn(command, args, {
         detached: true
       });
-    } catch (error) {}
+    } catch (error) { }
 
     return spawnedProcess;
   };
