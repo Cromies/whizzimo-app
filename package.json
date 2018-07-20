@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "auto-updater": "^1.0.2",
-    "electron-installer-dmg": "^1.0.0",
+    "electron-packager": "^12.1.0",
     "electron-winstaller": "^2.6.3"
   },
   "repository": {
@@ -15,7 +15,7 @@
   "devDependencies": {},
   "scripts": {
     "build:win": "node build.js",
-    "build:mac": "electron-installer-dmg ./whizzimo-source/dist/mac/Whizzimo-darwin-x64/Whizzimo.app Whizzimo --out=./whizzimo-installer/mac --overwrite --icon=./whizzimo-source/icons/icon.icns --debug=true"
+    "build:darwin": "electron-osx-flat"
   },
   "author": "Matthew Hemingway",
   "license": "ISC"
