@@ -20,8 +20,8 @@
     "start": "electron .",
     "debug": "electron --inspect-brk=5858 index.js",
     "pack:win": "electron-builder --dir -w --x64 -p always",
-    "pack:darwin": "electron-packager . \"Whizzimo\" --overwrite --platform=darwin --arch=x64 --app-bundle-id=\"com.prolificrew.whizzimo\" --app-version=\"1.0.26\" --build-version=\"1.0.100\" --icon=icons/icon.icns --prune=true --out=dist/mac --osx-sign",
-    "pack:mas": "electron-packager . \"Whizzimo\" --overwrite --platform=mas --arch=x64 --app-bundle-id=\"com.prolificrew.whizzimo\" --app-version=\"1.0.26\" --build-version=\"1.0.100\" --icon=icons/icon.icns --prune=true --out=dist/mac --osx-sign",
+    "pack:darwin": "electron-packager . \"Whizzimo\" --overwrite --platform=darwin --arch=x64 --app-bundle-id=\"com.prolificrew.whizzimo\" --app-version=\"1.0.26\" --build-version=\"1.0.100\" --icon=icons/icon.icns --prune=true --out=dist/mac electron-osx-sign \"dist/mac/Whizzimo-darwin-x64/Whizzimo.app\"",
+    "pack:mas": "electron-packager . \"Whizzimo\" --overwrite --platform=mas --arch=x64 --app-bundle-id=\"com.prolificrew.whizzimo\" --app-version=\"1.0.26\" --build-version=\"1.0.100\" --icon=icons/icon.icns --prune=true --out=dist/mac electron-osx-sign \"dist/mac/Whizzimo-darwin-x64/Whizzimo.app\"",
     "test": "mocha"
   },
   "license": "CC0-1.0",
@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
+    "electron-osx-sign": "^0.4.10",
     "electron-squirrel-startup": "^1.0.0",
     "electron-updater": "^2.18.2",
     "request": "^2.87.0"
